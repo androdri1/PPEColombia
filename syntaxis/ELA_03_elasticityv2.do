@@ -45,9 +45,7 @@ end
 cd "$output\log"
 cap log close
 log using "ELA_02_elasticityv3.smcl", replace
-*set linesize 255
-log off
-
+set linesize 255
 
 use "$bases\Main\ENCSP_PanelTabaco.dta" , clear
 drop _merge
@@ -255,25 +253,17 @@ if 1==1 {
 		get_lincomest , reg(r8) test(" _b[pcigXest2]*($precio/$prev_est2)") name(pe_est2)
 		get_lincomest , reg(r8) test(" _b[pcigXest3]*($precio/$prev_est3)") name(pe_est3)
 		
-		
-		*log on
-		*saveresults extensiveMarginv3.pdf, replace: 
 		esttab r2 r3 r6 r7 r8 using "$output/tables/tableME.csv", star(* 0.1 ** 0.05 *** 0.001) ///
 			stats(	N test1 test1_p test2 test2_p test5 test5_p test3 test3_p test4 test4_p   ///
 					pe_g pe_g_p pe_age1 pe_age1_p pe_age2 pe_age2_p pe_age3 pe_age3_p pe_m pe_m_p pe_f pe_f_p pe_est1 pe_est1_p pe_est2 pe_est2_p pe_est3 pe_est3_p ///
 			) se keep(p_cig pcigXjoven pcigXadulto pcigXviejo pcigXmale pcigXfemale pcigXest1 pcigXest2 pcigXest3 )  csv replace
-		*log off
-		
-		
-		log on		
+
 		esttab r2 r3 r6 r7 r8 , star(* 0.1 ** 0.05 *** 0.001) ///
 			stats(	N test1 test1_p test2 test2_p test5 test5_p test3 test3_p test4 test4_p   ///
 					pe_g pe_g_p pe_age1 pe_age1_p pe_age2 pe_age2_p pe_age3 pe_age3_p pe_m pe_m_p pe_f pe_f_p pe_est1 pe_est1_p pe_est2 pe_est2_p pe_est3 pe_est3_p ///
 			) se keep(p_cig pcigXjoven pcigXadulto pcigXviejo pcigXmale pcigXfemale pcigXest1 pcigXest2 pcigXest3 ) replace
 			
-		log off
-		
-		translate ELA_02_elasticityv3.smcl ELA_02_elasticityv3.pdf, replace 
+
 		
 		
 		
@@ -445,6 +435,10 @@ foreach x in young adult middle{
 }
 
 grc1leg2 young adult middle, r(1) title("Figure A1. Sensitivity Analysis - Minimum age in the dataset") name(graph1, replace) ycomm note("Source: Author's calculations.", size(vsmall)) leg(young)
-graph export "$elasticity\documento\2019_12 Tobacco control Response 2\output\images\SA_age.png", as(png) replace
+graph export "$output/images/SA_age.png", as(png) replace
+
+log close
+translate ELA_02_elasticityv3.smcl ELA_02_elasticityv3.pdf, replace 
+
 
 	*graph close _all
