@@ -4,10 +4,17 @@
 * @Author: Paul Rodriguez & Susana Otalvaro
 ********************************************************************************
 
-glo dropbox="C:\Users\PaulAndrés\Dropbox"
-glo dropbox="C:\Users\paul.rodriguez\Dropbox\tabaco"
-glo dropbox="C:\Users\\`c(username)'\\Dropbox" //Susana
-
+if "`c(username)'"=="paul.rodriguez" {
+	glo dropbox="F:\Paul.Rodriguez\Dropbox\tabaco"
+}
+else if "`c(username)'"=="andro" {
+	glo dropbox="C:\Users\andro\Dropbox\tabaco"
+}
+else {
+	glo dropbox="C:\Users\\`c(username)'\Dropbox"
+	glo bases ="$dropbox\Tabaco y Enfermedades Respiratorias (1)\Bases de Datos"
+	glo output="$dropbox\Tabaco y Enfermedades Respiratorias (1)\output"	
+}
 glo bases ="$dropbox\Tabaco y Enfermedades Respiratorias\Bases de Datos"
 glo output="$dropbox\Tabaco y Enfermedades Respiratorias\output"
 

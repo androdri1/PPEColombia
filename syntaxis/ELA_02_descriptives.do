@@ -7,8 +7,15 @@
 if "`c(username)'"=="paul.rodriguez" {
 	glo dropbox="F:\Paul.Rodriguez\Dropbox\tabaco"
 }
+else if "`c(username)'"=="andro" {
+	glo dropbox="C:\Users\andro\Dropbox\tabaco"
+}
 else {
 	glo dropbox="C:\Users\\`c(username)'\Dropbox"
+	glo bases ="$dropbox\Tabaco y Enfermedades Respiratorias (1)\Bases de Datos"
+	*glo output="$dropbox\Tabaco y Enfermedades Respiratorias (1)\output"	
+	*glo output="$dropbox\tabacoDrive\smokingParticipationElasticity\PPEColombiaRe\output"
+	glo elasticity = "$dropbox\tabacoDrive\smokingParticipationElasticity"
 }
 
 
@@ -59,9 +66,8 @@ gen ipc2008= ipc if year==2008
 bys depart: egen ipc2008x=max(ipc2008) 
 gen deflactor=ipc/ipc2008x
 
-replace p_cig = p_cig/deflactor
-drop lp_cig
-gen lp_cig=ln(p_cig)
+replace p_cig = p_cig/(deflactor)
+label var p_cig "Real price pesos"
 
 label var marijuanaEver "Ever tried Marihuana"
 
@@ -99,7 +105,7 @@ tab `var'Ever `var'P
 
 	correl ipc ipc_tabaco ipc_alimentos ipc_alcohol p_cig
 	
-	recode edad (0/25=1 "10-25") (26/44=2 "26-44") (45/65=3 "45-65"), g(grupo_edad1)
+	recode edad (0/25=1 "10-25") (26/50=2 "26-50") (51/65=3 "51-65"), g(grupo_edad1)
 	recode estratoSES (1/2=1 "1-2")(3=2 "3")(4/6=3 "4-6"), g(estrato_)
 	
 	gen joven = (edad<25) if edad!=.
@@ -107,21 +113,10 @@ tab `var'Ever `var'P
 	
 	tab grupo_edad1, g(juv_)
 	
-	gen pcigXjoven = lp_cig*juv_1
-	gen pcigXadulto = lp_cig*juv_2
-	gen pcigXviejo = lp_cig*juv_3
-	
 	gen male = sexo
 	gen female1 = 1-sexo
-	gen pcigXmale = lp_cig*male
-	gen pcigXfemale = lp_cig*female1
-	
+
 	tab estrato_ , g(est_)
-	
-	gen pcigXest1 = lp_cig*est_1
-	gen pcigXest2 = lp_cig*est_2
-	gen pcigXest3 = lp_cig*est_3
-	
 
 
 // Años que lleva fumando
